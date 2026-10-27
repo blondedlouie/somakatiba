@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #111111;
+  --flag-red: #be1111;
+  --flag-green: #0a5c27;
+  --paper: #f8f9fa;
+  --rule: #d9dcdf;
+}
+
+body {
+  background: #ffffff;
+  color: var(--ink);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, nav, button, .label {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 3px solid var(--flag-green);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

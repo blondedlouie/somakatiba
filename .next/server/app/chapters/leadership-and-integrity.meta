@@ -1,0 +1,39 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/chapters/layout,_N_T_/chapters/[chapterId]/layout,_N_T_/chapters/[chapterId]/page,_N_T_/chapters/leadership-and-integrity"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/chapters/$d$chapterId/__PAGE__"
+  ],
+  "prefetchHints": {
+    "hints": 64,
+    "slots": {
+      "children": {
+        "hints": 96,
+        "slots": {
+          "children": {
+            "hints": 96,
+            "slots": {
+              "children": {
+                "hints": 160,
+                "slots": null
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/904650a5e14e40b93bf9fdf401c1911eefb61ee24d757841adb206373e8af184/$/chapters/leadership-and-integrity",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/chapters/[chapterId]/page"
+    },
+    "isFallback": false
+  }
+}
