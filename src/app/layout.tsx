@@ -19,6 +19,13 @@ export const metadata: Metadata = {
   title: "Soma Katiba KE: Reading, Understanding, Explaining The Constitution",
   description: "An educational platform dedicated to educating every Kenyan with clear, unbiased constitutional literacy. Sovereign power belongs to the people.",
   keywords: ["Kenya Constitution 2010", "Katiba", "Bill of Rights", "Devolution", "Article 35 ATI"],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "192x192", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({
