@@ -39,7 +39,8 @@ export default function ArticleAccordion({ articles, chapterNumber }: ArticleAcc
     if (!q) return true;
     return (
       art.title.toLowerCase().includes(q) ||
-      art.summary.toLowerCase().includes(q) ||
+      art.summary?.toLowerCase().includes(q) ||
+      art.content.toLowerCase().includes(q) ||
       `article ${art.articleNumber}`.includes(q) ||
       (art.clauses && art.clauses.some((c) => c.text.toLowerCase().includes(q))) ||
       (art.plainExplanation && art.plainExplanation.toLowerCase().includes(q))
@@ -121,9 +122,11 @@ export default function ArticleAccordion({ articles, chapterNumber }: ArticleAcc
                         {article.title}
                       </h3>
                     </div>
-                    <p className="font-serif text-sm text-ink-muted mt-1 leading-normal">
-                      {article.summary}
-                    </p>
+                    {article.summary && (
+                      <p className="font-serif text-sm text-ink-muted mt-1 leading-normal">
+                        {article.summary}
+                      </p>
+                    )}
                   </div>
 
                   <div className="mt-1 flex-shrink-0">
@@ -162,6 +165,17 @@ export default function ArticleAccordion({ articles, chapterNumber }: ArticleAcc
                             </div>
                           ))}
                         </div>
+                      </div>
+                    )}
+
+                    {(!article.clauses || article.clauses.length === 0) && article.content && (
+                      <div className="space-y-3">
+                        <p className="font-sans font-bold text-xs uppercase tracking-wider text-ink-muted">
+                          Text
+                        </p>
+                        <p className="font-serif text-[17px] text-ink leading-[1.6]">
+                          {article.content}
+                        </p>
                       </div>
                     )}
 

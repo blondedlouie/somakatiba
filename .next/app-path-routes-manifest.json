@@ -2,5 +2,6 @@
   "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
   "/chapters/[chapterId]/page": "/chapters/[chapterId]",
-  "/page": "/"
+  "/page": "/",
+  "/toolkit/page": "/toolkit"
 }

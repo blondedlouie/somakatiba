@@ -6,6 +6,7 @@ import constitutionData from "@/data/constitution.json";
 import ArticleAccordion from "@/components/chapter/ArticleAccordion";
 import FlagRibbon from "@/components/ui/FlagRibbon";
 import FlagEdge, { FlagCategory } from "@/components/ui/FlagEdge";
+import SocialLinks from "@/components/ui/SocialLinks";
 import { ConstitutionChapter } from "@/types";
 
 interface PageProps {
@@ -80,14 +81,7 @@ export default async function ChapterPage({ params }: PageProps) {
             Chapter {chapter.number} of 18
           </span>
 
-          <a
-            href="https://www.instagram.com/somakatibake"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-sans font-bold text-xs px-3.5 py-1.5 border-2 border-ink text-ink hover:bg-ink hover:text-white rounded-control transition-colors"
-          >
-            @somakatibake
-          </a>
+          <SocialLinks className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-ink text-ink transition-colors hover:bg-ink hover:text-white [&_svg]:h-4 [&_svg]:w-4" />
         </div>
       </header>
 

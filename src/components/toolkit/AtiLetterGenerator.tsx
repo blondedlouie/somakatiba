@@ -1,254 +1,286 @@
 "use client";
 
-import React, { useState } from "react";
-import { Download, Copy, Check, FileText } from "lucide-react";
+import { useState, type FormEvent } from "react";
+import jsPDF from "jspdf";
+import { Download, FileSearch } from "lucide-react";
+
+interface AtiFormData {
+  fullName: string;
+  nationalId: string;
+  target: string;
+  department: string;
+  requestedInfo: string;
+}
+
+const fieldClassName =
+  "mt-1 w-full rounded-control border-2 border-ink bg-white px-3 py-2.5 font-sans text-sm text-ink focus:border-flag-green focus:outline-none";
+
+function printableText(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\u2013\u2014]/g, "-")
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201c\u201d]/g, '"')
+    .replace(/[^\x20-\x7e]/g, "?");
+}
 
 export default function AtiLetterGenerator() {
-  const [formData, setFormData] = useState({
-    applicantName: "",
+  const [formData, setFormData] = useState<AtiFormData>({
+    fullName: "",
     nationalId: "",
-    email: "",
-    phone: "",
-    county: "Nairobi City County",
-    department: "Department of Finance and Economic Planning",
-    requestedInfo:
-      "Detailed breakdown of the FY 2023/2024 County Ward Development Fund expenditures and procurement tenders awarded for local health centers.",
-    date: new Date().toISOString().split("T")[0],
+    target: "",
+    department: "",
+    requestedInfo: "",
   });
+  const [pdfError, setPdfError] = useState("");
 
-  const [copied, setCopied] = useState(false);
-
-  const counties = [
-    "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo Marakwet", "Embu", "Garissa",
-    "Homa Bay", "Isiolo", "Kajiado", "Kakamega", "Kericho", "Kiambu", "Kilifi",
-    "Kirinyaga", "Kisii", "Kisumu", "Kitui", "Kwale", "Laikipia", "Lamu",
-    "Machakos", "Makueni", "Mandera", "Marsabit", "Meru", "Migori", "Mombasa",
-    "Murang'a", "Nairobi City County", "Nakuru", "Nandi", "Narok", "Nyamira",
-    "Nyandarua", "Nyeri", "Samburu", "Siaya", "Taita Taveta", "Tana River",
-    "Tharaka Nithi", "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
-  ];
-
-  const letterText = `FORMAL REQUEST FOR ACCESS TO INFORMATION
-PURSUANT TO ARTICLE 35 OF THE CONSTITUTION OF KENYA, 2010
-AND THE ACCESS TO INFORMATION ACT (NO. 31 OF 2016)
-
-Date: ${formData.date}
-
-TO:
-The County Chief Officer / Designated Information Officer,
-${formData.department},
-County Government of ${formData.county},
-Republic of Kenya.
-
-FROM:
-Name of Applicant: ${formData.applicantName || "[Your Full Name]"}
-National ID Number: ${formData.nationalId || "[Your ID Number]"}
-Email: ${formData.email || "[Your Email Address]"}
-Telephone: ${formData.phone || "[Your Phone Number]"}
-
-RE: FORMAL REQUEST FOR PUBLIC INFORMATION UNDER ARTICLE 35
-
-Dear Sir/Madam,
-
-1. Pursuant to Article 35(1)(a) of the Constitution of Kenya, which guarantees that "Every citizen has the right of access to information held by the State", read together with Sections 4 and 8 of the Access to Information Act (No. 31 of 2016), I hereby respectfully request copies of the following information:
-
-REQUEST DETAILS:
-${formData.requestedInfo || "[Specify details of information requested]"}
-
-2. In accordance with Section 9 of the Access to Information Act, 2016, a public entity is mandated to respond to an application within twenty-one (21) days of receipt.
-
-3. I look forward to your timely response in the public interest and in defense of good governance and accountability as enshrined under Article 10 of our Constitution.
-
-Yours faithfully,
-
-${formData.applicantName || "[Your Signature & Full Name]"}
-Citizen of the Republic of Kenya`;
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(letterText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const updateField = (field: keyof AtiFormData, value: string) => {
+    setFormData((current) => ({ ...current, [field]: value }));
   };
 
-  const handleDownload = () => {
-    const element = document.createElement("a");
-    const file = new Blob([letterText], { type: "text/plain;charset=utf-8" });
-    element.href = URL.createObjectURL(file);
-    element.download = `ATI_Request_${formData.county.replace(/\s+/g, "_")}.txt`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+  const generatePDF = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPdfError("");
+
+    try {
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 20;
+      const contentWidth = pageWidth - margin * 2;
+      let y = margin;
+
+      const ensureSpace = (height: number) => {
+        if (y + height > pageHeight - margin) {
+          doc.addPage();
+          y = margin;
+        }
+      };
+
+      const addText = (
+        text: string,
+        options: { bold?: boolean; fontSize?: number; after?: number } = {},
+      ) => {
+        const { bold = false, fontSize = 10, after = 3 } = options;
+        doc.setFont("helvetica", bold ? "bold" : "normal");
+        doc.setFontSize(fontSize);
+        const lines = doc.splitTextToSize(
+          printableText(text),
+          contentWidth,
+        ) as string[];
+        const lineHeight = fontSize * 0.48;
+
+        for (const line of lines) {
+          ensureSpace(lineHeight);
+          doc.text(line, margin, y);
+          y += lineHeight;
+        }
+        y += after;
+      };
+
+      doc.setFillColor(17, 17, 17);
+      doc.rect(margin, y, contentWidth, 25, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.text("ACCESS TO INFORMATION REQUEST", margin + 6, y + 9);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.text(
+        "ARTICLE 35, CONSTITUTION OF KENYA, 2010 | ACT NO. 31 OF 2016",
+        margin + 6,
+        y + 17,
+      );
+      y += 31;
+
+      doc.setFillColor(190, 17, 17);
+      doc.roundedRect(margin, y, contentWidth, 12, 1, 1, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.text(
+        "STATUTORY RESPONSE PERIOD: 21 DAYS FROM RECEIPT",
+        margin + 4,
+        y + 7.5,
+      );
+      doc.setTextColor(17, 17, 17);
+      y += 19;
+
+      const date = new Date().toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+      addText(`Date: ${date}`, { after: 7 });
+      addText("TO:", { bold: true, after: 1 });
+      addText(formData.department, { bold: true, after: 1 });
+      addText(formData.target, { after: 7 });
+      addText("FROM:", { bold: true, after: 1 });
+      addText(formData.fullName, { after: 1 });
+      addText(`National ID number: ${formData.nationalId}`, { after: 7 });
+      addText("RE: REQUEST FOR ACCESS TO PUBLIC INFORMATION", {
+        bold: true,
+        fontSize: 11,
+        after: 7,
+      });
+      addText("Dear Sir/Madam,", { after: 5 });
+      addText(
+        "Pursuant to Article 35 of the Constitution of Kenya, 2010 and the Access to Information Act, No. 31 of 2016, I request access to the following information held by your office:",
+        { after: 4 },
+      );
+      addText("INFORMATION REQUESTED", { bold: true, after: 2 });
+      addText(formData.requestedInfo, { after: 7 });
+      addText(
+        "Please provide the information in an accessible form. If any part of this request is declined, kindly identify the specific legal basis and explain the applicable review or appeal process.",
+        { after: 5 },
+      );
+      addText(
+        "Under section 9 of the Access to Information Act, the public entity is required to respond to an application as soon as possible and not later than 21 days after receipt, subject to the Act.",
+        { after: 8 },
+      );
+      addText("Yours faithfully,", { after: 13 });
+      addText("Signature: __________________________________", {
+        bold: true,
+        after: 4,
+      });
+      addText(`Name: ${formData.fullName}`, { after: 2 });
+      addText(`National ID number: ${formData.nationalId}`, { after: 9 });
+      addText("OFFICE RECEIPT", { bold: true, after: 3 });
+      addText("Received by: _______________________  Date: ______________", {
+        after: 3,
+      });
+      addText("Reference number: ______________________________________");
+
+      const pageCount = doc.getNumberOfPages();
+      for (let page = 1; page <= pageCount; page += 1) {
+        doc.setPage(page);
+        doc.setDrawColor(217, 220, 223);
+        doc.line(margin, pageHeight - 13, pageWidth - margin, pageHeight - 13);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text("Soma Katiba KE | Access to information request", margin, pageHeight - 8);
+        doc.text(`${page} / ${pageCount}`, pageWidth - margin, pageHeight - 8, {
+          align: "right",
+        });
+      }
+
+      const fileName = formData.fullName
+        .trim()
+        .replace(/[^a-zA-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+      doc.save(`ATI_Request_${fileName || "Citizen"}.pdf`);
+    } catch (error) {
+      console.error("Failed to generate access to information request PDF.", error);
+      setPdfError(
+        "The PDF could not be generated. Please try again or print this page instead.",
+      );
+    }
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-      {/* Form Input Column */}
-      <div className="lg:col-span-5 bg-white border border-rule rounded-card p-6 sm:p-7 space-y-4">
+    <div className="rounded-card border border-rule bg-white p-6 sm:p-8">
+      <div className="mb-6 flex items-start gap-4 border-b border-rule pb-5">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-control bg-paper text-flag-green">
+          <FileSearch className="h-5 w-5" aria-hidden="true" />
+        </span>
         <div>
-          <h3 className="font-sans font-bold text-lg text-ink">
-            Request parameters
-          </h3>
-          <p className="font-serif text-xs text-ink-muted mt-0.5">
-            Fill in your details to populate your formal Article 35 letter.
+          <p className="font-sans text-xs font-bold uppercase tracking-wide text-flag-green">
+            Article 35 | Access to Information Act, No. 31 of 2016
+          </p>
+          <h2 className="mt-1 font-sans text-2xl font-black text-ink">
+            Formal Access to Information Request
+          </h2>
+          <p className="mt-2 font-serif text-sm leading-relaxed text-ink-muted">
+            Complete the fields to prepare a request for a public entity. The
+            PDF is generated in your browser and is not sent to this website.
           </p>
         </div>
+      </div>
 
-        <div className="space-y-3 font-sans text-xs">
-          <div>
-            <label className="font-bold text-ink block mb-1">
-              Full legal name
-            </label>
+      <form onSubmit={generatePDF} className="space-y-5">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="font-sans text-xs font-bold text-ink">
+            Full name
             <input
-              type="text"
-              placeholder="e.g. John Kimani"
-              value={formData.applicantName}
-              onChange={(e) => setFormData({ ...formData, applicantName: e.target.value })}
-              className="w-full px-3 py-2 text-sm border-2 border-ink rounded-control focus:outline-none focus:border-flag-green font-sans"
+              required
+              autoComplete="name"
+              value={formData.fullName}
+              onChange={(event) => updateField("fullName", event.target.value)}
+              className={fieldClassName}
             />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="font-bold text-ink block mb-1">
-                National ID number
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. 12345678"
-                value={formData.nationalId}
-                onChange={(e) => setFormData({ ...formData, nationalId: e.target.value })}
-                className="w-full px-3 py-2 text-sm border-2 border-ink rounded-control focus:outline-none focus:border-flag-green font-sans"
-              />
-            </div>
-            <div>
-              <label className="font-bold text-ink block mb-1">
-                Phone number
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. 0712 345 678"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-3 py-2 text-sm border-2 border-ink rounded-control focus:outline-none focus:border-flag-green font-sans"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="font-bold text-ink block mb-1">
-              Email address
-            </label>
+          </label>
+          <label className="font-sans text-xs font-bold text-ink">
+            ID number
             <input
-              type="email"
-              placeholder="e.g. citizen@kenya.co.ke"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3 py-2 text-sm border-2 border-ink rounded-control focus:outline-none focus:border-flag-green font-sans"
+              required
+              autoComplete="off"
+              value={formData.nationalId}
+              onChange={(event) => updateField("nationalId", event.target.value)}
+              className={fieldClassName}
             />
-          </div>
-
-          <div>
-            <label className="font-bold text-ink block mb-1">
-              Target County Government
-            </label>
-            <select
-              value={formData.county}
-              onChange={(e) => setFormData({ ...formData, county: e.target.value })}
-              className="w-full px-3 py-2 text-sm border-2 border-ink rounded-control focus:outline-none focus:border-flag-green bg-white font-sans"
-            >
-              {counties.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="font-bold text-ink block mb-1">
-              Target Department or Ministry
-            </label>
+          </label>
+          <label className="font-sans text-xs font-bold text-ink">
+            Target county or ministry
             <input
-              type="text"
+              required
+              placeholder="For example, County Government of Kiambu"
+              value={formData.target}
+              onChange={(event) => updateField("target", event.target.value)}
+              className={fieldClassName}
+            />
+          </label>
+          <label className="font-sans text-xs font-bold text-ink">
+            Department
+            <input
+              required
+              placeholder="For example, Department of Health"
               value={formData.department}
-              onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-              className="w-full px-3 py-2 text-sm border-2 border-ink rounded-control focus:outline-none focus:border-flag-green font-sans"
+              onChange={(event) =>
+                updateField("department", event.target.value)
+              }
+              className={fieldClassName}
             />
-          </div>
-
-          <div>
-            <label className="font-bold text-ink block mb-1">
-              Information or records requested
-            </label>
-            <textarea
-              rows={4}
-              value={formData.requestedInfo}
-              onChange={(e) => setFormData({ ...formData, requestedInfo: e.target.value })}
-              className="w-full px-3 py-2 text-sm border-2 border-ink rounded-control focus:outline-none focus:border-flag-green font-sans leading-relaxed"
-            />
-          </div>
+          </label>
         </div>
+        <label className="block font-sans text-xs font-bold text-ink">
+          Specific public information requested
+          <textarea
+            required
+            rows={5}
+            placeholder="Describe the records, dates, locations, and format you are requesting."
+            value={formData.requestedInfo}
+            onChange={(event) =>
+              updateField("requestedInfo", event.target.value)
+            }
+            className={fieldClassName}
+          />
+        </label>
 
-        <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="w-full sm:flex-1 font-sans font-bold text-xs bg-flag-green hover:bg-flag-green-hover text-white rounded-control px-4 py-3 flex items-center justify-center gap-2 cursor-pointer transition-colors"
+        {pdfError && (
+          <p
+            role="alert"
+            className="rounded-control bg-red-50 p-3 font-sans text-sm text-flag-red"
           >
-            {copied ? (
-              <>
-                <Check className="w-4 h-4" />
-                Copied to clipboard
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" />
-                Copy letter text
-              </>
-            )}
-          </button>
+            {pdfError}
+          </p>
+        )}
+
+        <div className="border-t border-rule pt-5">
           <button
-            type="button"
-            onClick={handleDownload}
-            className="w-full sm:flex-1 font-sans font-bold text-xs bg-white hover:bg-ink hover:text-white border-2 border-ink text-ink rounded-control px-4 py-3 flex items-center justify-center gap-2 cursor-pointer transition-colors"
+            type="submit"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-control bg-flag-green px-5 py-3.5 font-sans text-sm font-bold text-white transition-colors hover:bg-flag-green-hover sm:w-auto"
           >
-            <Download className="w-4 h-4" />
-            Download text file
+            <Download className="h-5 w-5" aria-hidden="true" />
+            Download request PDF
           </button>
+          <p className="mt-3 font-serif text-xs leading-relaxed text-ink-muted">
+            The 21-day response period is subject to the Access to Information
+            Act. Check the relevant public entity's submission requirements.
+          </p>
         </div>
-      </div>
-
-      {/* Letter Preview Sheet Column */}
-      <div className="lg:col-span-7">
-        <div
-          style={{
-            boxShadow: "8px 8px 0 #be1111",
-          }}
-          className="bg-white border border-rule border-t-[6px] border-t-flag-green rounded-card p-6 sm:p-10 font-serif text-[15px] sm:text-[16px] text-ink leading-relaxed"
-        >
-          <div className="border-b border-rule pb-4 mb-5 flex items-center justify-between">
-            <div>
-              <span className="font-sans font-bold text-xs uppercase tracking-wider text-flag-green block">
-                Official citizen petition
-              </span>
-              <span className="font-sans font-black text-sm text-ink">
-                Access to Information Act, 2016
-              </span>
-            </div>
-            <span className="font-sans text-xs text-ink-muted">
-              {formData.date}
-            </span>
-          </div>
-
-          <pre className="font-serif whitespace-pre-wrap leading-relaxed text-ink text-[14px] sm:text-[15px] selection:bg-paper">
-            {letterText}
-          </pre>
-
-          <div className="mt-8 pt-4 border-t border-rule text-xs font-serif text-ink-muted italic">
-            Statutory notice: Section 9 of the Access to Information Act mandates a response within 21 calendar days.
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
   );
 }

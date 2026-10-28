@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import FlagRule from "@/components/ui/FlagRule";
 import FlagEdge from "@/components/ui/FlagEdge";
@@ -20,7 +21,8 @@ export const SAMPLE_POSTS = [
           "Centralized presidential power governed with weak checks and balances.",
           "Widespread human rights violations prompted pro-democracy movements in the 1990s.",
         ],
-        callout: "Defining question: How do we build a Kenya where power belongs to the people?",
+        callout:
+          "Defining question: How do we build a Kenya where power belongs to the people?",
       },
       {
         step: "2 of 3",
@@ -42,7 +44,8 @@ export const SAMPLE_POSTS = [
           "Devolution established 47 distinct County Governments.",
           "A comprehensive Bill of Rights enforcing clear limits on state authority.",
         ],
-        callout: "Sovereign power belongs to the people of Kenya. Understanding it is the first step.",
+        callout:
+          "Sovereign power belongs to the people of Kenya. Understanding it is the first step.",
       },
     ],
   },
@@ -82,14 +85,17 @@ export const SAMPLE_POSTS = [
           "Our goal is constitutional literacy for all Kenyans.",
           "Follow for regular, verified, unbiased legal insights.",
         ],
-        callout: "The primary mandate of every citizen is to defend the Constitution.",
+        callout:
+          "The primary mandate of every citizen is to defend the Constitution.",
       },
     ],
   },
 ];
 
 export default function SocialCarouselFeed() {
-  const [activeSlideIndex, setActiveSlideIndex] = useState<{ [postId: string]: number }>({
+  const [activeSlideIndex, setActiveSlideIndex] = useState<{
+    [postId: string]: number;
+  }>({
     "post-1": 0,
     "post-2": 0,
   });
@@ -109,7 +115,10 @@ export default function SocialCarouselFeed() {
   };
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-paper border-t border-rule" id="graphics">
+    <section
+      className="py-16 sm:py-20 lg:py-24 bg-paper border-t border-rule"
+      id="graphics"
+    >
       <div className="max-w-[1180px] mx-auto px-4 sm:px-8 lg:px-12">
         {/* Section Heading with Flag Rule */}
         <div className="mb-12 sm:mb-16">
@@ -118,7 +127,8 @@ export default function SocialCarouselFeed() {
             Visual civic education
           </h2>
           <p className="font-serif text-ink-muted text-base sm:text-lg mt-2 max-w-2xl leading-normal">
-            Bite-sized constitutional breakdowns designed for civic learning and social sharing.
+            Bite-sized constitutional breakdowns designed for civic learning and
+            social sharing.
           </p>
         </div>
 
@@ -140,9 +150,13 @@ export default function SocialCarouselFeed() {
                 {/* Account Header Strip */}
                 <div className="p-4 border-b border-rule flex items-center justify-between bg-white">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-card border-2 border-ink bg-paper flex items-center justify-center font-sans font-black text-xs text-ink">
-                      SK
-                    </div>
+                    <Image
+                      src="/assets/logo/logo-kt.jpg"
+                      alt="Soma Katiba KE"
+                      width={32}
+                      height={32}
+                      className="w-8 h-8 rounded-card border-2 border-ink bg-paper object-cover"
+                    />
                     <div>
                       <span className="font-sans font-bold text-sm text-ink block leading-tight">
                         somakatibake
@@ -180,8 +194,13 @@ export default function SocialCarouselFeed() {
 
                     <ul className="space-y-3">
                       {slideData.content.map((point, idx) => (
-                        <li key={idx} className="font-serif text-[17px] text-ink leading-relaxed flex items-start gap-3">
-                          <span className="font-sans font-black text-flag-green text-sm flex-shrink-0 mt-0.5">•</span>
+                        <li
+                          key={idx}
+                          className="font-serif text-[17px] text-ink leading-relaxed flex items-start gap-3"
+                        >
+                          <span className="font-sans font-black text-flag-green text-sm flex-shrink-0 mt-0.5">
+                            •
+                          </span>
                           <span>{point}</span>
                         </li>
                       ))}

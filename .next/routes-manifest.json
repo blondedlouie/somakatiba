@@ -49,6 +49,12 @@
       "regex": "^/_not\\-found(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/toolkit",
+      "regex": "^/toolkit(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/toolkit(?:/)?$"
     }
   ],
   "dataRoutes": [],

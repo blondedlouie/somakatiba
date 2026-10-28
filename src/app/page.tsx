@@ -7,7 +7,8 @@ import FlagRule from "@/components/ui/FlagRule";
 import HistoricalTimeline from "@/components/home/HistoricalTimeline";
 import ChapterGrid from "@/components/home/ChapterGrid";
 import SocialCarouselFeed from "@/components/home/SocialCarouselFeed";
-import AtiLetterGenerator from "@/components/toolkit/AtiLetterGenerator";
+import ToolkitPreview from "@/components/ToolkitPreview";
+import SocialLinks from "@/components/ui/SocialLinks";
 import { ConstitutionChapter } from "@/types";
 
 export default function HomePage() {
@@ -67,10 +68,10 @@ export default function HomePage() {
               Infographics
             </Link>
             <Link
-              href="#toolkit"
+              href="/toolkit"
               className="hover:text-flag-green transition-colors"
             >
-              Article 35 Toolkit
+              Citizen Toolkit
             </Link>
             <Link
               href="#pledge"
@@ -81,28 +82,7 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center space-x-3">
-            <a
-              href="https://www.instagram.com/somakatibake"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-2 font-sans font-bold text-xs px-4 py-2.5 bg-flag-green text-white hover:bg-flag-green-hover rounded-lg transition-colors shadow-sm uppercase tracking-wider"
-            >
-              <span>Follow @somakatibake</span>
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2.5}
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </svg>
-            </a>
+            <SocialLinks className="hidden h-10 w-10 items-center justify-center rounded-full bg-flag-green text-white shadow-sm transition-colors hover:bg-flag-green-hover sm:inline-flex [&_svg]:h-5 [&_svg]:w-5" />
           </div>
         </div>
       </header>
@@ -116,9 +96,12 @@ export default function HomePage() {
               <div className="space-y-6">
                 {/* Main Headline */}
                 <h1 className="text-4xl sm:text-6xl lg:text-[72px] font-black text-ink tracking-tight leading-[1.02] font-sans">
-                  Reading.<br />
-                  Understanding.<br />
-                  <span className="text-flag-green">Explaining The</span><br />
+                  Reading.
+                  <br />
+                  Understanding.
+                  <br />
+                  <span className="text-flag-green">Explaining The</span>
+                  <br />
                   <span className="text-flag-green">Constitution.</span>
                 </h1>
 
@@ -129,7 +112,10 @@ export default function HomePage() {
 
                 {/* Subtext Paragraph */}
                 <p className="text-base sm:text-lg text-ink-muted font-sans leading-relaxed max-w-xl">
-                  The Constitution of Kenya is the supreme covenant of our Republic. We translate legal provisions into systematic, unbiased civic education to ensure every citizen knows their rights and holds authority accountable.
+                  The Constitution of Kenya is the supreme covenant of our
+                  Republic. We translate legal provisions into systematic,
+                  unbiased civic education to ensure every citizen knows their
+                  rights and holds authority accountable.
                 </p>
 
                 {/* CTA Buttons */}
@@ -273,7 +259,13 @@ export default function HomePage() {
                   </div>
 
                   <blockquote className="border-l-4 border-flag-green pl-4 font-serif italic text-ink text-sm sm:text-[15px] leading-relaxed">
-                    &ldquo;We, the people of Kenya, ACKNOWLEDGING the supremacy of the Almighty God of all creation; HONOURING those who heroically struggled to bring freedom and justice to our land... EXERCISING our sovereign and inalienable right to determine the form of governance of our country... ADOPT, ENACT and give this Constitution to ourselves and to our future generations.&rdquo;
+                    &ldquo;We, the people of Kenya, ACKNOWLEDGING the supremacy
+                    of the Almighty God of all creation; HONOURING those who
+                    heroically struggled to bring freedom and justice to our
+                    land... EXERCISING our sovereign and inalienable right to
+                    determine the form of governance of our country... ADOPT,
+                    ENACT and give this Constitution to ourselves and to our
+                    future generations.&rdquo;
                   </blockquote>
 
                   <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] font-sans font-bold tracking-wider">
@@ -304,7 +296,10 @@ export default function HomePage() {
       <SocialCarouselFeed />
 
       {/* 8. Citizen Action Toolkit (Article 35 Generator) */}
-      <section className="py-16 sm:py-20 lg:py-24 bg-paper border-t border-rule" id="toolkit">
+      <section
+        className="py-16 sm:py-20 lg:py-24 bg-paper border-t border-rule"
+        id="toolkit"
+      >
         <div className="max-w-[1180px] mx-auto px-4 sm:px-8 lg:px-12">
           <div className="mb-10 sm:mb-12">
             <FlagRule className="mb-4" />
@@ -312,16 +307,20 @@ export default function HomePage() {
               Citizen Action Toolkit
             </h2>
             <p className="font-serif text-ink-muted text-base sm:text-lg mt-2 max-w-2xl leading-normal">
-              Generate a formal Access to Information request under Article 35 of the Constitution and the Access to Information Act (No. 31 of 2016).
+              Access practical tools for information requests, county budgets,
+              and public participation submissions.
             </p>
           </div>
 
-          <AtiLetterGenerator />
+          <ToolkitPreview />
         </div>
       </section>
 
       {/* 9. Non-Partisan Pledge Section */}
-      <section className="py-16 sm:py-20 lg:py-24 bg-white border-t border-rule" id="pledge">
+      <section
+        className="py-16 sm:py-20 lg:py-24 bg-white border-t border-rule"
+        id="pledge"
+      >
         <div className="max-w-[1180px] mx-auto px-4 sm:px-8 lg:px-12">
           <div className="max-w-3xl">
             <FlagRule className="mb-4" />
@@ -330,7 +329,11 @@ export default function HomePage() {
             </h2>
             <div className="p-6 sm:p-8 bg-paper border border-rule border-l-[4px] border-l-flag-red rounded-card">
               <p className="font-serif text-[18px] sm:text-[20px] text-ink leading-relaxed">
-                Important Disclaimer and Non-Partisan Pledge. The SOMA KATIBA KE initiative, its social media platforms, and organization are purely for educational purposes. We are not affiliated with any political person, political party, or movement whatsoever. We serve only knowledge.
+                Important Disclaimer and Non-Partisan Pledge. The SOMA KATIBA KE
+                initiative, its social media platforms, and organization are
+                purely for educational purposes. We are not affiliated with any
+                political person, political party, or movement whatsoever. We
+                serve only knowledge.
               </p>
               <p className="font-sans text-xs font-bold text-ink-muted mt-4">
                 Project by ctrlHUB.
@@ -353,7 +356,9 @@ export default function HomePage() {
                   Soma Katiba KE
                 </span>
                 <p className="font-serif text-sm text-ink-muted leading-relaxed">
-                  Reading, understanding, and explaining the Constitution of Kenya (2010). A non-partisan civic initiative dedicated to grassroots legal literacy.
+                  Reading, understanding, and explaining the Constitution of
+                  Kenya (2010). A non-partisan civic initiative dedicated to
+                  grassroots legal literacy.
                 </p>
                 <p className="font-sans text-xs font-bold text-ink-muted">
                   Project by ctrlHUB.
@@ -367,27 +372,42 @@ export default function HomePage() {
                 </h4>
                 <ul className="space-y-2 text-sm font-sans font-medium text-ink-muted">
                   <li>
-                    <Link href="#chapters" className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors">
+                    <Link
+                      href="#chapters"
+                      className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors"
+                    >
                       The 18 Chapters
                     </Link>
                   </li>
                   <li>
-                    <Link href="#timeline" className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors">
+                    <Link
+                      href="#timeline"
+                      className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors"
+                    >
                       Historical Timeline
                     </Link>
                   </li>
                   <li>
-                    <Link href="#graphics" className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors">
+                    <Link
+                      href="#graphics"
+                      className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors"
+                    >
                       Visual Infographics
                     </Link>
                   </li>
                   <li>
-                    <Link href="#toolkit" className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors">
+                    <Link
+                      href="#toolkit"
+                      className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors"
+                    >
                       Article 35 Generator
                     </Link>
                   </li>
                   <li>
-                    <Link href="#pledge" className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors">
+                    <Link
+                      href="#pledge"
+                      className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors"
+                    >
                       Non-Partisan Pledge
                     </Link>
                   </li>
@@ -401,27 +421,42 @@ export default function HomePage() {
                 </h4>
                 <ul className="space-y-2 text-sm font-sans font-medium text-ink-muted">
                   <li>
-                    <Link href="/chapters/1" className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors">
+                    <Link
+                      href="/chapters/1"
+                      className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors"
+                    >
                       Article 1: Sovereignty of the People
                     </Link>
                   </li>
                   <li>
-                    <Link href="/chapters/4" className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors">
+                    <Link
+                      href="/chapters/4"
+                      className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors"
+                    >
                       Article 35: Access to Information
                     </Link>
                   </li>
                   <li>
-                    <Link href="/chapters/4" className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors">
+                    <Link
+                      href="/chapters/4"
+                      className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors"
+                    >
                       Article 37: Assembly and Demonstration
                     </Link>
                   </li>
                   <li>
-                    <Link href="/chapters/6" className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors">
+                    <Link
+                      href="/chapters/6"
+                      className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors"
+                    >
                       Article 73: Leadership and Integrity
                     </Link>
                   </li>
                   <li>
-                    <Link href="/chapters/11" className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors">
+                    <Link
+                      href="/chapters/11"
+                      className="hover:text-ink hover:underline hover:decoration-flag-red transition-colors"
+                    >
                       Article 174: Objects of Devolution
                     </Link>
                   </li>
@@ -434,18 +469,10 @@ export default function HomePage() {
                   Connect
                 </h4>
                 <p className="font-serif text-sm text-ink-muted leading-relaxed">
-                  Join our civic education community on Instagram for regular constitutional updates and explanations.
+                  Follow us on Instagram and X for regular constitutional
+                  updates and explanations.
                 </p>
-                <div>
-                  <a
-                    href="https://www.instagram.com/somakatibake"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block font-sans font-bold text-xs px-4 py-2 border-2 border-ink text-ink hover:bg-ink hover:text-white rounded-control transition-colors"
-                  >
-                    @somakatibake on Instagram
-                  </a>
-                </div>
+                <SocialLinks className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-ink text-ink transition-colors hover:bg-ink hover:text-white [&_svg]:h-5 [&_svg]:w-5" />
               </div>
             </div>
           </div>
@@ -453,10 +480,12 @@ export default function HomePage() {
 
         <div className="max-w-[1180px] mx-auto px-4 sm:px-8 lg:px-12 py-6 flex flex-col sm:flex-row items-center justify-between text-xs font-sans text-ink-muted gap-4">
           <p>
-            Constitution of Kenya (2010). Non-commercial civic education project.
+            Constitution of Kenya (2010). Non-commercial civic education
+            project.
           </p>
           <p className="text-center sm:text-right">
-            Project by ctrlHUB. Promoting Constitutional Literacy across all 47 Counties of Kenya.
+            Project by ctrlHUB. Promoting Constitutional Literacy across all 47
+            Counties of Kenya.
           </p>
         </div>
       </footer>

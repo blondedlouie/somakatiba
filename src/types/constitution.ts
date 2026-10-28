@@ -6,7 +6,9 @@ export interface ConstitutionClause {
 export interface ConstitutionArticle {
   articleNumber: number;
   title: string;
-  summary: string;
+  summary?: string;
+  content: string;
+  partTitle?: string | null;
   clauses?: ConstitutionClause[];
   plainExplanation?: string;
 }
